@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/course_controller.dart';
+import 'quiz_page.dart';
 
 class CourseDetailPage extends StatelessWidget {
   CourseDetailPage({super.key});
@@ -68,7 +69,8 @@ class CourseDetailPage extends StatelessWidget {
 
               Text("${(controller.progress * 100).toInt()}% completado"),
 
-              if (controller.progress == 1.0)
+              if (controller.completedLessons.length == course.lessons.length &&
+                  controller.quizCompleted.value)
                 Padding(
                   padding: const EdgeInsets.only(top: 15),
                   child: SizedBox(
@@ -84,6 +86,20 @@ class CourseDetailPage extends StatelessWidget {
                         );
                       },
                       child: const Text("Obtener Certificado"),
+                    ),
+                  ),
+                ),
+
+              if (controller.completedLessons.length == course.lessons.length)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(() => QuizPage());
+                      },
+                      child: const Text("Presentar Quiz"),
                     ),
                   ),
                 ),

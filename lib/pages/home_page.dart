@@ -4,7 +4,7 @@ import '../controllers/course_controller.dart';
 import 'course_detail_page.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  HomePage({super.key});
 
   final CourseController controller = Get.put(CourseController());
 

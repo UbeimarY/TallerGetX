@@ -1,15 +1,17 @@
 import 'package:get/get.dart';
-import '../models/course_model.dart';
-import '../models/question_model.dart';
+import 'package:global_status/models/course_model.dart';
+import 'package:global_status/models/quiz_question.dart' as models;
 
 class CourseController extends GetxController {
   var courses = <Course>[].obs;
   var selectedCourse = Rxn<Course>();
   var completedLessons = <int>[].obs;
 
-  var questions = <Question>[].obs;
-  var selectedAnswers = <int>[].obs;
+  var questions = <models.QuizQuestion>[].obs;
+  // Map: questionIndex -> selectedOptionIndex
+  var selectedAnswers = <int, int>{}.obs;
   var score = 0.obs;
+  var quizCompleted = false.obs;
 
   @override
   void onInit() {
@@ -71,7 +73,7 @@ class CourseController extends GetxController {
     score.value = 0;
 
     questions.addAll([
-      Question(
+      models.QuizQuestion(
         question: "¿Qué es Flutter?",
         options: [
           "Un lenguaje",
@@ -81,7 +83,7 @@ class CourseController extends GetxController {
         ],
         correctIndex: 1,
       ),
-      Question(
+      models.QuizQuestion(
         question: "¿Qué es GetX?",
         options: [
           "Base de datos",
@@ -95,13 +97,23 @@ class CourseController extends GetxController {
   }
 
   void answerQuestion(int questionIndex, int selectedIndex) {
-    // evitar responder dos veces la misma pregunta
-    if (selectedAnswers.length > questionIndex) return;
+    selectedAnswers[questionIndex] = selectedIndex;
+  }
 
-    selectedAnswers.add(selectedIndex);
-
-    if (questions[questionIndex].correctIndex == selectedIndex) {
-      score.value++;
+  void computeScore() {
+    var s = 0;
+    for (var i = 0; i < questions.length; i++) {
+      final sel = selectedAnswers[i];
+      if (sel != null && questions[i].correctIndex == sel) {
+        s++;
+      }
     }
+    score.value = s;
+  }
+
+  bool allQuestionsAnswered() => selectedAnswers.length == questions.length;
+
+  void markQuizCompleted() {
+    quizCompleted.value = true;
   }
 }
