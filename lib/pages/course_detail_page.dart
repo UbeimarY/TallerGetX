@@ -10,13 +10,9 @@ class CourseDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(
-        title: Obx(() {
-          final course = controller.selectedCourse.value;
-          return Text(course?.title ?? "Curso");
-        }),
-      ),
+      appBar: AppBar(title: const Text("Detalle del Curso")),
       body: Obx(() {
         final course = controller.selectedCourse.value;
 
@@ -24,12 +20,53 @@ class CourseDetailPage extends StatelessWidget {
           return const Center(child: Text("No hay curso seleccionado"));
         }
 
-        return Padding(
+        return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(course.description, style: const TextStyle(fontSize: 18)),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colors.primary.withValues(alpha: 0.9),
+                      colors.secondary.withValues(alpha: 0.9),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colors.primary.withValues(alpha: 0.2),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      course.title,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            color: colors.onPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      course.description,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: colors.onPrimary),
+                    ),
+                  ],
+                ),
+              ),
 
               const SizedBox(height: 20),
 
@@ -40,30 +77,30 @@ class CourseDetailPage extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-              Expanded(
-                child: ListView.builder(
-                  itemCount: course.lessons.length,
-                  itemBuilder: (context, index) {
-                    return Obx(() {
-                      bool completed = controller.completedLessons.contains(
-                        index,
-                      );
-
-                      return CheckboxListTile(
-                        title: Text(course.lessons[index]),
-                        value: completed,
-                        onChanged: (_) {
-                          controller.toggleLesson(index);
-                        },
-                      );
-                    });
-                  },
-                ),
-              ),
+              ...List.generate(course.lessons.length, (index) {
+                return Obx(() {
+                  bool completed = controller.completedLessons.contains(index);
+                  return Card(
+                    child: CheckboxListTile(
+                      title: Text(course.lessons[index]),
+                      value: completed,
+                      onChanged: (_) => controller.toggleLesson(index),
+                    ),
+                  );
+                });
+              }),
 
               const SizedBox(height: 10),
 
-              LinearProgressIndicator(value: controller.progress),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: controller.progress,
+                  minHeight: 10,
+                  backgroundColor: colors.surfaceContainerHighest,
+                  color: colors.primary,
+                ),
+              ),
 
               const SizedBox(height: 5),
 
