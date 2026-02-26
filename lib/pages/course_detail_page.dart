@@ -29,14 +29,7 @@ class CourseDetailPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      colors.primary.withValues(alpha: 0.9),
-                      colors.secondary.withValues(alpha: 0.9),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: colors.primaryContainer,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -53,16 +46,16 @@ class CourseDetailPage extends StatelessWidget {
                       course.title,
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
-                            color: colors.onPrimary,
+                            color: colors.onPrimaryContainer,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       course.description,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: colors.onPrimary),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colors.onPrimaryContainer,
+                      ),
                     ),
                   ],
                 ),

@@ -11,49 +11,55 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Cursos Disponibles"),
         centerTitle: true,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              colors.surface,
-              colors.surfaceContainerHighest.withValues(alpha: 0.6),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Obx(() {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 3 / 2,
+      body: Obx(() {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Explora cursos",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              itemCount: controller.courses.length,
-              itemBuilder: (context, index) {
-                final course = controller.courses[index];
-                return CourseCard(
-                  title: course.title,
-                  subtitle: course.description,
-                  onTap: () {
-                    controller.selectCourse(course);
-                    Get.to(() => CourseDetailPage());
+              const SizedBox(height: 8),
+              Text(
+                "Aprende con rutas claras, sin distracciones",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 3 / 2,
+                  ),
+                  itemCount: controller.courses.length,
+                  itemBuilder: (context, index) {
+                    final course = controller.courses[index];
+                    return CourseCard(
+                      title: course.title,
+                      subtitle: course.description,
+                      onTap: () {
+                        controller.selectCourse(course);
+                        Get.to(() => CourseDetailPage());
+                      },
+                    );
                   },
-                );
-              },
-            ),
-          );
-        }),
-      ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
